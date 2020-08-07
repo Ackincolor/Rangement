@@ -28,7 +28,7 @@ public class DialogRangement implements  View.OnClickListener {
         addrangement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                homeViewModel.getRangements().add(new Rangement(nomRangement.getText().toString()));
+                homeViewModel.addRangement(new Rangement(nomRangement.getText().toString()));
                 dialog.dismiss();
             }
         });

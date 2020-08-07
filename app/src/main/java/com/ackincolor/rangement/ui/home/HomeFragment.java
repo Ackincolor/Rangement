@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ackincolor.rangement.Database.RangementManager;
 import com.ackincolor.rangement.MainActivity;
 import com.ackincolor.rangement.R;
 import com.ackincolor.rangement.controllers.ClickRangementcontroller;
@@ -33,8 +34,10 @@ public class HomeFragment extends Fragment {
             FloatingActionButton fab = root.findViewById(R.id.floatingaddrangementactionbtn);
             RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.rangementrecyclerview);
             recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+            homeViewModel.setRangementManager(new RangementManager(getContext()));
+            homeViewModel.loadFromDatabase();
             ClickRangementcontroller clickRangementcontroller = new ClickRangementcontroller(recyclerView,homeViewModel,(MainActivity) getParentFragment().getActivity());
-
+            ((MainActivity) getParentFragment().getActivity()).setHomeViewModel(homeViewModel);
             RangementAdapter rangementAdapter = new RangementAdapter(inflater, homeViewModel.getRangements(),clickRangementcontroller);
             recyclerView.setAdapter(rangementAdapter);
 
