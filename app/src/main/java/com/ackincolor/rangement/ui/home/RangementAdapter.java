@@ -19,6 +19,9 @@ public class RangementAdapter extends RecyclerView.Adapter<RangementAdapter.Rang
     private List<Rangement> rangements;
     private ClickRangementcontroller clickRangementcontroller;
 
+    public static final int COMMON = 1;
+    public static final int SEPARATOR = 2;
+
 
     public RangementAdapter(LayoutInflater inflater, List<Rangement> rangements, ClickRangementcontroller clickRangementcontroller) {
         this.inflater = inflater;
@@ -63,5 +66,10 @@ public class RangementAdapter extends RecyclerView.Adapter<RangementAdapter.Rang
             super(itemView);
             this.view = itemView;
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return COMMON;
     }
 }

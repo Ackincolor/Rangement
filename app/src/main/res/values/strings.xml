@@ -11,4 +11,5 @@
     <string name="longueur">longueur:</string>
     <string name="largeur">largeur:</string>
     <string name="hauteur">hauteur:</string>
+    <string name="status">status:</string>
 </resources>

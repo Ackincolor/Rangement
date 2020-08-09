@@ -1,5 +1,6 @@
 package com.ackincolor.rangement.models;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,12 +12,12 @@ public class Rangement implements Parcelable {
     private ArrayList<Objet> objets;
     private Double hauteur,largeur,profondeur;
     private UUID id;
+    private Bitmap thumbnail;
+    private Bitmap fullsizeImage;
     public Rangement(){
         this.id = UUID.randomUUID();
         this.nom = "Rangement";
         this.objets = new ArrayList<>();
-        this.objets.add(new Objet("téléphone"));
-        this.objets.add(new Objet("télévision"));
         this.largeur = this.hauteur = this.profondeur = 0.0;
     }
     public Rangement(String nom){
@@ -32,6 +33,8 @@ public class Rangement implements Parcelable {
         this.profondeur = in.readDouble();
         this.largeur = in.readDouble();
         this.hauteur=in.readDouble();
+        this.fullsizeImage = in.readParcelable(Bitmap.class.getClassLoader());
+        this.thumbnail = in.readParcelable(Bitmap.class.getClassLoader());
     }
     public void AjouterObjet(Objet obj){
         this.objets.add(obj);
@@ -83,6 +86,22 @@ public class Rangement implements Parcelable {
     }
     public String getVolumeTexte(){
         return this.getVolume().toString();
+    }
+
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public Bitmap getFullsizeImage() {
+        return fullsizeImage;
+    }
+
+    public void setFullsizeImage(Bitmap fullsizeImage) {
+        this.fullsizeImage = fullsizeImage;
     }
 
     @Override

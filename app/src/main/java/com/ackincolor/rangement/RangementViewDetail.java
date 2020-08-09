@@ -1,8 +1,13 @@
 package com.ackincolor.rangement;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 
+import com.ackincolor.rangement.Database.RangementManager;
+import com.ackincolor.rangement.controllers.PhotoController;
 import com.ackincolor.rangement.models.Objet;
 import com.ackincolor.rangement.models.Rangement;
 import com.ackincolor.rangement.ui.dialogs.DialogObjet;
@@ -13,15 +18,21 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class RangementViewDetail extends AppCompatActivity {
 
     Rangement rangement;
+    PhotoController photoController;
+
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +41,8 @@ public class RangementViewDetail extends AppCompatActivity {
         setContentView(R.layout.activity_rangement_view_detail);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        photoController = new PhotoController(this);
 
         TextView textView = findViewById(R.id.textView2);
         textView.setText(this.rangement.getNom());
@@ -43,6 +56,18 @@ public class RangementViewDetail extends AppCompatActivity {
         dashboardFragment.setObjetListe(new ArrayList<Objet>(dashboardFragment.getDashboardViewModel().getObjetManager().getAllObjetsForRangmeent(this.rangement.getId())));
         Button addbtnobjet = findViewById(R.id.addbtnobjet);
 
+        this.imageView = findViewById(R.id.imageView);
+        if(this.rangement.getThumbnail()!=null){
+            this.imageView.setImageBitmap(this.rangement.getThumbnail());
+        }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File photo = photoController.takePhoto();
+
+            }
+        });
+
 
         final DialogObjet dialogObjet = new DialogObjet(dashboardFragment.getDashboardViewModel(),this,this.rangement);
 
@@ -52,7 +77,36 @@ public class RangementViewDetail extends AppCompatActivity {
                 dialogObjet.onClick(view);
             }
         });
+        this.loadImage();
 
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PhotoController.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            //get your gallery image uri data here
+            Log.d("DEBUG PHOTO","résultat activité ici");
+            Log.d("DEBUG PHOTO", "Photo prise : "+ photoController.currentPhotoPath);
+            Bitmap fullsizeimage= BitmapFactory.decodeFile(photoController.currentPhotoPath);
+
+            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage,120,120);
+            this.rangement.setThumbnail(imageBitmap);
+            this.rangement.setFullsizeImage( fullsizeimage);
+            this.imageView.setImageBitmap(imageBitmap);
+            save();
+        }
+    }
+    private void loadImage(){
+        RangementManager rangementManager = new RangementManager(this);
+        rangementManager.open();
+        this.rangement = rangementManager.getRangements(this.rangement.getId().toString());
+        if(this.rangement.getThumbnail()!=null)
+            this.imageView.setImageBitmap(photoController.getResizedBitmap(this.rangement.getThumbnail(),120,120));
+    }
+
+    private void save(){
+        RangementManager rangementManager = new RangementManager(this);
+        rangementManager.open();
+        rangementManager.updateRangement(this.rangement);
     }
 
 }
