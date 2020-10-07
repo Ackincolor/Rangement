@@ -11,6 +11,7 @@ import com.ackincolor.rangement.controllers.PhotoController;
 import com.ackincolor.rangement.models.Objet;
 import com.ackincolor.rangement.models.Rangement;
 import com.ackincolor.rangement.ui.dialogs.DialogObjet;
+import com.ackincolor.rangement.ui.dialogs.SwipeHelper;
 import com.ackincolor.rangement.ui.objet.DashboardFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -58,7 +59,7 @@ public class RangementViewDetail extends AppCompatActivity {
 
         this.imageView = findViewById(R.id.imageView);
         if(this.rangement.getThumbnail()!=null){
-            this.imageView.setImageBitmap(this.rangement.getThumbnail());
+            this.imageView.setImageBitmap(photoController.getResizedBitmap(BitmapFactory.decodeFile(this.rangement.getFullsizeImage()), SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300)));
         }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,9 +89,9 @@ public class RangementViewDetail extends AppCompatActivity {
             Log.d("DEBUG PHOTO", "Photo prise : "+ photoController.currentPhotoPath);
             Bitmap fullsizeimage= BitmapFactory.decodeFile(photoController.currentPhotoPath);
 
-            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage,120,120);
-            this.rangement.setThumbnail(imageBitmap);
-            this.rangement.setFullsizeImage( fullsizeimage);
+            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage, SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300));
+            this.rangement.setThumbnail(photoController.currentPhotoPath);
+            this.rangement.setFullsizeImage( photoController.currentPhotoPath);
             this.imageView.setImageBitmap(imageBitmap);
             save();
         }
@@ -100,7 +101,7 @@ public class RangementViewDetail extends AppCompatActivity {
         rangementManager.open();
         this.rangement = rangementManager.getRangements(this.rangement.getId().toString());
         if(this.rangement.getThumbnail()!=null)
-            this.imageView.setImageBitmap(photoController.getResizedBitmap(this.rangement.getThumbnail(),120,120));
+            this.imageView.setImageBitmap(photoController.getResizedBitmap(BitmapFactory.decodeFile(this.rangement.getFullsizeImage()), SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300)));
     }
 
     private void save(){

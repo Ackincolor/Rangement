@@ -26,12 +26,14 @@ public class RangementManager {
     public static String KEY_NOM_RANGEMENT = "nom_rangement";
     public static String KEY_FULL_IMAGE = "full_image";
     public static String KEY_THUMBNAIL_IMAGE = "thumbnail_image";
+    public static String KEY_RANGEMENT_PARENT = "id_rangement_parent";
     public static String CREATE_TABLE_RANGEMENT = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+KEY_ID_RANGEMENT+" STRING primary key," +
             " "+KEY_NOM_RANGEMENT+" TEXT," +
-            " "+KEY_FULL_IMAGE+" BLOB,"+
-            " "+KEY_THUMBNAIL_IMAGE+" BLOB"+
+            " "+KEY_FULL_IMAGE+" STRING,"+
+            " "+KEY_THUMBNAIL_IMAGE+" STRING,"+
+            " "+KEY_RANGEMENT_PARENT+" STRING"+
             ");";
 
     public RangementManager(Context context){
@@ -49,9 +51,10 @@ public class RangementManager {
         values.put(KEY_ID_RANGEMENT,rangement.getId().toString());
 
         if(rangement.getFullsizeImage()!=null) {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            rangement.getFullsizeImage().compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            values.put(KEY_FULL_IMAGE, bos.toByteArray());
+            values.put(KEY_FULL_IMAGE, rangement.getFullsizeImage());
+        }
+        if(rangement.getIdRangementParent()!=null){
+            values.put(KEY_RANGEMENT_PARENT, rangement.getIdRangementParent().toString());
         }
 
         // insert() retourne l'id du nouvel enregistrement inséré, ou -1 en cas d'erreur
@@ -66,14 +69,10 @@ public class RangementManager {
 
     public void updateRangement(Rangement rangement){
         ContentValues values = new ContentValues();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-        rangement.getFullsizeImage().compress(Bitmap.CompressFormat.JPEG, 100, bos);
-        rangement.getThumbnail().compress(Bitmap.CompressFormat.JPEG, 100, bos2);
         values.put(KEY_NOM_RANGEMENT,rangement.getNom());
         values.put(KEY_ID_RANGEMENT,rangement.getId().toString());
-        values.put(KEY_FULL_IMAGE,bos.toByteArray());
-        values.put(KEY_THUMBNAIL_IMAGE,bos2.toByteArray());
+        values.put(KEY_FULL_IMAGE,rangement.getFullsizeImage());
+        values.put(KEY_THUMBNAIL_IMAGE,rangement.getThumbnail());
 
         db.update(TABLE_NAME,values,KEY_ID_RANGEMENT+"='"+rangement.getId().toString()+"'",null);
     }
@@ -86,13 +85,13 @@ public class RangementManager {
         while(!c.isAfterLast()){
             Rangement rangement = new Rangement(c.getString(1));
             rangement.setId(UUID.fromString(c.getString(0)));
-            byte[] image = c.getBlob(2);
+            String image = c.getString(2);
             if(image!=null) {
-                rangement.setFullsizeImage(BitmapFactory.decodeByteArray(image, 0, image.length));
+                rangement.setFullsizeImage(image);
             }
-            byte[] thumbnail = c.getBlob(3);
+            String thumbnail = c.getString(3);
             if(thumbnail!=null) {
-                rangement.setThumbnail(BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length));
+                rangement.setThumbnail(thumbnail);
             }
             liste.add(rangement);
             c.moveToNext();
@@ -107,13 +106,13 @@ public class RangementManager {
         while(!c.isAfterLast()){
             Rangement rangement = new Rangement(c.getString(1));
             rangement.setId(UUID.fromString(c.getString(0)));
-            byte[] image = c.getBlob(2);
+            String image = c.getString(2);
             if(image!=null) {
-                rangement.setFullsizeImage(BitmapFactory.decodeByteArray(image, 0, image.length));
+                rangement.setFullsizeImage(image);
             }
-            byte[] thumbnail = c.getBlob(3);
+            String thumbnail = c.getString(3);
             if(thumbnail!=null) {
-                rangement.setThumbnail(BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length));
+                rangement.setThumbnail(thumbnail);
             }
             c.moveToNext();
             return rangement;

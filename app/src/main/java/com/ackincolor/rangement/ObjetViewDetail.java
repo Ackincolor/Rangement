@@ -1,5 +1,7 @@
 package com.ackincolor.rangement;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +11,8 @@ import com.ackincolor.rangement.Database.ObjetManager;
 import com.ackincolor.rangement.controllers.PhotoController;
 import com.ackincolor.rangement.models.Objet;
 import com.ackincolor.rangement.models.Rangement;
+import com.ackincolor.rangement.ui.dialogs.DialogNewName;
+import com.ackincolor.rangement.ui.dialogs.SwipeHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -17,8 +21,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -41,8 +48,20 @@ public class ObjetViewDetail extends AppCompatActivity {
 
         TextView nomobjet = findViewById(R.id.textView3);
         nomobjet.setText("OBJET de nom :");
-        TextView textView = findViewById(R.id.textView4);
+        final TextView textView = findViewById(R.id.textView4);
         textView.setText(this.objet.getNom());
+        TextView statusView = findViewById(R.id.textView8);
+        statusView.setText(this.objet.getStatus());
+        ImageButton modifyNameBtn = findViewById(R.id.modifyNamebtn);
+        ImageButton modifyStatus = findViewById(R.id.modifystatusbtn);
+
+        modifyNameBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogNewName dialogNewName = new DialogNewName(ObjetViewDetail.this,objet,textView);
+                dialogNewName.onClick(v);
+            }
+        });
 
         photoController = new PhotoController(this);
 
@@ -50,7 +69,40 @@ public class ObjetViewDetail extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File photo = photoController.takePhoto();
+                //demande de changement de photos
+                if(objet.getFullsizeImage()!=null){
+                    // Build an AlertDialog
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ObjetViewDetail.this);
+                    // Set a title for alert dialog
+                    builder.setTitle("");
+                    // Ask the final question
+                    builder.setMessage("Prendre une nouvelle photo ?");
+                    // Set the alert dialog yes button click listener
+                    builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            File photo = photoController.takePhoto();
+                        }
+                    });
+                    // Set the alert dialog no button click listener
+                    builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do something when No button clicked
+                            Toast.makeText(getApplicationContext(),
+                                    "Ok pas de nouvelle photo",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    builder.setView(R.layout.alertdialogimageview);
+                    AlertDialog dialog = builder.create();
+
+                    // Display the alert dialog on interface
+                    dialog.show();
+                    ImageView imageviewdialog = dialog.findViewById(R.id.dialog_imageview);
+                    imageviewdialog.setImageBitmap(photoController.getResizedBitmap( BitmapFactory.decodeFile(objet.getFullsizeImage()), SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300)));
+                }else{
+                    File photo = photoController.takePhoto();
+                }
 
             }
         });
@@ -64,10 +116,9 @@ public class ObjetViewDetail extends AppCompatActivity {
             Log.d("DEBUG PHOTO","résultat activité ici");
             Log.d("DEBUG PHOTO", "Photo prise : "+ photoController.currentPhotoPath);
             Bitmap fullsizeimage= BitmapFactory.decodeFile(photoController.currentPhotoPath);
-
-            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage,120,120);
-            this.objet.setThumbnail(imageBitmap);
-            this.objet.setFullsizeImage( fullsizeimage);
+            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage,SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300));
+            this.objet.setThumbnail(photoController.currentPhotoPath);
+            this.objet.setFullsizeImage( photoController.currentPhotoPath);
             this.imageView.setImageBitmap(imageBitmap);
             save();
         }
@@ -77,7 +128,7 @@ public class ObjetViewDetail extends AppCompatActivity {
         objetManager.open();
         this.objet = objetManager.getObjet(this.objet.getId().toString());
         if(this.objet.getThumbnail()!=null){
-            this.imageView.setImageBitmap(photoController.getResizedBitmap(this.objet.getThumbnail(),120,120));
+            this.imageView.setImageBitmap(photoController.getResizedBitmap(BitmapFactory.decodeFile(this.objet.getThumbnail()),SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300)));
         }
     }
 

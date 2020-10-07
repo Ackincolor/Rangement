@@ -11,7 +11,8 @@ public class Objet implements Parcelable {
     public enum Status {
         PRETE("Prété"),
         RANGE("Rangé"),
-        ENRANGEMENT("En rangement");
+        ENRANGEMENT("En rangement"),
+        EMPRUNTE("Emprunté");
 
         private String name = "";
 
@@ -28,9 +29,11 @@ public class Objet implements Parcelable {
     private String nom;
     private Double poid,prix,hauteur,largeur,profondeur;
     private UUID rangement;
-    private Bitmap thumbnail;
-    private Bitmap fullsizeImage;
+    private String thumbnail;
+    private String fullsizeImage;
     private Status status;
+    private String pretea;
+    private Integer quantite;
     protected boolean isSeparator = false;
 
 
@@ -87,7 +90,7 @@ public class Objet implements Parcelable {
         }
     };
 
-    public Bitmap getThumbnail() {
+    public String getThumbnail() {
         return thumbnail;
     }
 
@@ -104,15 +107,15 @@ public class Objet implements Parcelable {
         this.status = Status.valueOf(name);
     }
 
-    public void setThumbnail(Bitmap thumbnail) {
+    public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 
-    public Bitmap getFullsizeImage() {
+    public String getFullsizeImage() {
         return fullsizeImage;
     }
 
-    public void setFullsizeImage(Bitmap fullsizeImage) {
+    public void setFullsizeImage(String fullsizeImage) {
         this.fullsizeImage = fullsizeImage;
     }
 
@@ -126,6 +129,26 @@ public class Objet implements Parcelable {
 
     public UUID getRangement() {
         return rangement;
+    }
+
+    public void setNom(String nom){
+        this.nom = nom;
+    }
+
+    public String getPretea() {
+        return pretea;
+    }
+
+    public void setPretea(String pretea) {
+        this.pretea = pretea;
+    }
+
+    public Integer getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(Integer quantite) {
+        this.quantite = quantite;
     }
 
     @Override

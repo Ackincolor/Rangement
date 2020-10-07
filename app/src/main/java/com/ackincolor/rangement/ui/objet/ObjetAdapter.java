@@ -11,13 +11,15 @@ import com.ackincolor.rangement.controllers.ClickRangementcontroller;
 import com.ackincolor.rangement.models.Objet;
 import com.ackincolor.rangement.models.ObjetSeparator;
 import com.ackincolor.rangement.models.Rangement;
+import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
+import com.wdullaer.swipeactionadapter.SwipeDirection;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ObjetAdapter extends RecyclerView.Adapter<ObjetAdapter.BaseViewHolder> {
+public class ObjetAdapter extends RecyclerView.Adapter<ObjetAdapter.BaseViewHolder> implements SwipeActionAdapter.SwipeActionListener{
     private LayoutInflater inflater;
     private List<Objet> objets;
     private ClickObjetcontroller clickObjetcontroller;
@@ -39,6 +41,21 @@ public class ObjetAdapter extends RecyclerView.Adapter<ObjetAdapter.BaseViewHold
         return objets.size();
     }
 
+    @Override
+    public void onSwipe(int[] position, SwipeDirection[] direction) {
+
+    }
+    @Override
+    public boolean hasActions(int position, SwipeDirection direction){
+        if(direction.isLeft()) return true;
+        if(direction.isRight()) return true;
+        return false;
+    }
+    @Override
+    public boolean shouldDismiss(int position, SwipeDirection direction){
+        return false;
+        //return direction == SwipeDirection.DIRECTION_NORMAL_LEFT;
+    }
 
     @NonNull
     @Override

@@ -12,8 +12,9 @@ public class Rangement implements Parcelable {
     private ArrayList<Objet> objets;
     private Double hauteur,largeur,profondeur;
     private UUID id;
-    private Bitmap thumbnail;
-    private Bitmap fullsizeImage;
+    private UUID idRangementParent;
+    private String thumbnail;
+    private String fullsizeImage;
     public Rangement(){
         this.id = UUID.randomUUID();
         this.nom = "Rangement";
@@ -88,20 +89,28 @@ public class Rangement implements Parcelable {
         return this.getVolume().toString();
     }
 
-    public Bitmap getThumbnail() {
+    public String getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(Bitmap thumbnail) {
+    public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 
-    public Bitmap getFullsizeImage() {
+    public String getFullsizeImage() {
         return fullsizeImage;
     }
 
-    public void setFullsizeImage(Bitmap fullsizeImage) {
+    public void setFullsizeImage(String fullsizeImage) {
         this.fullsizeImage = fullsizeImage;
+    }
+
+    public UUID getIdRangementParent() {
+        return idRangementParent;
+    }
+
+    public void setIdRangementParent(UUID idRangementParent) {
+        this.idRangementParent = idRangementParent;
     }
 
     @Override

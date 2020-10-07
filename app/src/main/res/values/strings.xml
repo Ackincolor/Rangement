@@ -12,4 +12,10 @@
     <string name="largeur">largeur:</string>
     <string name="hauteur">hauteur:</string>
     <string name="status">status:</string>
+    <string name="nomobjet">nom objet</string>
+    <string name="nomrangement">nom rangement</string>
+    <string name="modifiernom">Modifier le nom</string>
+    <string name="Ajouterunobjet">Ajouter un objet</string>
+    <string name="search_title">Rechercher un objet</string>
+    <string name="search_hint">Rechercher ici</string>
 </resources>

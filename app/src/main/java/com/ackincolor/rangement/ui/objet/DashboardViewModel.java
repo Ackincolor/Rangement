@@ -34,6 +34,15 @@ public class DashboardViewModel extends ViewModel {
             this.objets = new ArrayList<>(this.objetManager.getAllObjets());
         }
     }
+    public boolean  deleteObjet(Objet objet){
+        if(objetManager.deleteObjet(objet))
+        {
+            this.objets.remove(objet);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public ArrayList<Objet> getObjets(){
         return this.objets;

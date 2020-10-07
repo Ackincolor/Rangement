@@ -32,8 +32,8 @@ public class ObjetManager {
             " "+KEY_ID_OBJET+" STRING primary key," +
             " "+KEY_NOM_OBJET+" TEXT," +
             " "+KEY_RANGEMENT_ID+" STRING," +
-            " "+KEY_FULL_IMAGE+" BLOB,"+
-            " "+KEY_THUMBNAIL_IMAGE+" BLOB,"+
+            " "+KEY_FULL_IMAGE+" STRING,"+
+            " "+KEY_THUMBNAIL_IMAGE+" STRING,"+
             " "+KEY_STATUS+" STRING" +
             ");";
 
@@ -56,9 +56,7 @@ public class ObjetManager {
         values.put(KEY_RANGEMENT_ID,"NULL");
         values.put(KEY_STATUS,objet.getStatusName());
         if(objet.getFullsizeImage()!=null) {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            objet.getFullsizeImage().compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            values.put(KEY_FULL_IMAGE, bos.toByteArray());
+            values.put(KEY_FULL_IMAGE, objet.getFullsizeImage());
         }
 
         // insert() retourne l'id du nouvel enregistrement inséré, ou -1 en cas d'erreur
@@ -76,13 +74,12 @@ public class ObjetManager {
         Cursor c = this.db.rawQuery(query,null);
         ArrayList<Objet> liste = new ArrayList<>();
         c.moveToNext();
+        boolean aucunishere = false;
         UUID lastRangement = null;
         while(!c.isAfterLast()){
             //verification du nom du rangement
             String uuidtest = c.getString(2);
             UUID idTest;
-
-
             if(!uuidtest.equals("NULL")){
                 idTest = UUID.fromString(uuidtest);
                 if(!idTest.equals(lastRangement))
@@ -102,8 +99,11 @@ public class ObjetManager {
                     lastRangement = idTest;
                 }
             }else{
-                ObjetSeparator objetSeparator = new ObjetSeparator("AUCUN");
-                liste.add(objetSeparator);
+                if(!aucunishere){
+                    ObjetSeparator objetSeparator = new ObjetSeparator("AUCUN");
+                    liste.add(objetSeparator);
+                    aucunishere=true;
+                }
             }
             //
             Objet objet = new Objet(c.getString(1));
@@ -114,13 +114,13 @@ public class ObjetManager {
                 Log.d("DEBUG","Objet sans UUID de rangement ");
                 objet.setRangement(null);
             }
-            byte[] image = c.getBlob(3);
+            String image = c.getString(3);
             if(image!=null) {
-                objet.setFullsizeImage(BitmapFactory.decodeByteArray(image, 0, image.length));
+                objet.setFullsizeImage(image);
             }
-            byte[] thumbnail = c.getBlob(4);
+            String thumbnail = c.getString(4);
             if(thumbnail!=null) {
-                objet.setThumbnail(BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length));
+                objet.setThumbnail(thumbnail);
             }
             String nameStatus = c.getString(5);
             objet.setStatus(nameStatus);
@@ -132,14 +132,10 @@ public class ObjetManager {
     }
     public void updateObjet(Objet objet){
         ContentValues values = new ContentValues();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-        objet.getFullsizeImage().compress(Bitmap.CompressFormat.JPEG, 100, bos);
-        objet.getThumbnail().compress(Bitmap.CompressFormat.JPEG, 100, bos2);
         values.put(KEY_NOM_OBJET,objet.getNom());
         values.put(KEY_ID_OBJET,objet.getId().toString());
-        values.put(KEY_FULL_IMAGE,bos.toByteArray());
-        values.put(KEY_THUMBNAIL_IMAGE,bos2.toByteArray());
+        values.put(KEY_FULL_IMAGE,objet.getFullsizeImage());
+        values.put(KEY_THUMBNAIL_IMAGE,objet.getThumbnail());
         values.put(KEY_STATUS,objet.getStatusName());
 
         db.update(TABLE_NAME,values,KEY_ID_OBJET+"='"+objet.getId().toString()+"'",null);
@@ -158,13 +154,13 @@ public class ObjetManager {
                 Log.d("DEBUG","Objet sans UUID de rangement ");
                 objet.setRangement(null);
             }
-            byte[] image = c.getBlob(2);
+            String image = c.getString(3);
             if(image!=null) {
-                objet.setFullsizeImage(BitmapFactory.decodeByteArray(image, 0, image.length));
+                objet.setFullsizeImage(image);
             }
-            byte[] thumbnail = c.getBlob(3);
+            String thumbnail = c.getString(4);
             if(thumbnail!=null) {
-                objet.setThumbnail(BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length));
+                objet.setThumbnail(thumbnail);
             }
             objet.setStatus(c.getString(5));
             liste.add(objet);
@@ -181,13 +177,13 @@ public class ObjetManager {
         while(!c.isAfterLast()){
             Objet objet = new Objet(c.getString(1));
             objet.setId(UUID.fromString(c.getString(0)));
-            byte[] image = c.getBlob(3);
+            String image = c.getString(3);
             if(image!=null) {
-                objet.setFullsizeImage(BitmapFactory.decodeByteArray(image, 0, image.length));
+                objet.setFullsizeImage(image);
             }
-            byte[] thumbnail = c.getBlob(4);
+            String thumbnail = c.getString(4);
             if(thumbnail!=null) {
-                objet.setThumbnail(BitmapFactory.decodeByteArray(thumbnail, 0, thumbnail.length));
+                objet.setThumbnail(thumbnail);
             }
             objet.setStatus(c.getString(5));
             c.moveToNext();
@@ -195,5 +191,8 @@ public class ObjetManager {
         }
         c.close();
         return null;
+    }
+    public boolean deleteObjet(Objet objet){
+        return db.delete(TABLE_NAME, KEY_ID_OBJET + "='" + objet.getId().toString()+"'", null) > 0;
     }
 }
