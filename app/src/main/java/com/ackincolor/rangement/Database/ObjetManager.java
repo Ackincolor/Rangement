@@ -134,6 +134,7 @@ public class ObjetManager {
         ContentValues values = new ContentValues();
         values.put(KEY_NOM_OBJET,objet.getNom());
         values.put(KEY_ID_OBJET,objet.getId().toString());
+        values.put(KEY_RANGEMENT_ID,objet.getRangement().toString());
         values.put(KEY_FULL_IMAGE,objet.getFullsizeImage());
         values.put(KEY_THUMBNAIL_IMAGE,objet.getThumbnail());
         values.put(KEY_STATUS,objet.getStatusName());

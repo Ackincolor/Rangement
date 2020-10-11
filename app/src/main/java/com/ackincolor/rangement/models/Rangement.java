@@ -138,4 +138,9 @@ public class Rangement implements Parcelable {
         dest.writeDouble(this.largeur);
         dest.writeDouble(this.hauteur);
     }
+
+    @Override
+    public String toString(){
+        return this.nom;
+    }
 }

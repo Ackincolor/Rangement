@@ -131,6 +131,16 @@ public class DashboardFragment extends Fragment implements SearchableFragment {
         this.objetAdapter.notifyDataSetChanged();
     }
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("debug search", "on Resume fragment");
+        this.dashboardViewModel.loadFromDatabase();
+        this.objetAdapter.setObjets(this.dashboardViewModel.getObjets());
+        this.objetAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {

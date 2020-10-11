@@ -12,6 +12,7 @@ import com.ackincolor.rangement.controllers.PhotoController;
 import com.ackincolor.rangement.models.Objet;
 import com.ackincolor.rangement.models.Rangement;
 import com.ackincolor.rangement.ui.dialogs.DialogNewName;
+import com.ackincolor.rangement.ui.dialogs.DialogStatut;
 import com.ackincolor.rangement.ui.dialogs.SwipeHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -47,10 +48,10 @@ public class ObjetViewDetail extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView nomobjet = findViewById(R.id.textView3);
-        nomobjet.setText("OBJET de nom :");
+        nomobjet.setText("Nom :");
         final TextView textView = findViewById(R.id.textView4);
         textView.setText(this.objet.getNom());
-        TextView statusView = findViewById(R.id.textView8);
+        final TextView statusView = findViewById(R.id.textView8);
         statusView.setText(this.objet.getStatus());
         ImageButton modifyNameBtn = findViewById(R.id.modifyNamebtn);
         ImageButton modifyStatus = findViewById(R.id.modifystatusbtn);
@@ -60,6 +61,14 @@ public class ObjetViewDetail extends AppCompatActivity {
             public void onClick(View v) {
                 DialogNewName dialogNewName = new DialogNewName(ObjetViewDetail.this,objet,textView);
                 dialogNewName.onClick(v);
+            }
+        });
+
+        modifyStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogStatut dialogStatut = new DialogStatut(ObjetViewDetail.this,objet,statusView);
+                dialogStatut.onClick(v);
             }
         });
 
@@ -99,7 +108,7 @@ public class ObjetViewDetail extends AppCompatActivity {
                     // Display the alert dialog on interface
                     dialog.show();
                     ImageView imageviewdialog = dialog.findViewById(R.id.dialog_imageview);
-                    imageviewdialog.setImageBitmap(photoController.getResizedBitmap( BitmapFactory.decodeFile(objet.getFullsizeImage()), SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300)));
+                    imageviewdialog.setImageBitmap(photoController.getResizedBitmap( BitmapFactory.decodeFile(objet.getFullsizeImage()), SwipeHelper.dpToPx(100),SwipeHelper.dpToPx(100)));
                 }else{
                     File photo = photoController.takePhoto();
                 }
@@ -116,7 +125,7 @@ public class ObjetViewDetail extends AppCompatActivity {
             Log.d("DEBUG PHOTO","résultat activité ici");
             Log.d("DEBUG PHOTO", "Photo prise : "+ photoController.currentPhotoPath);
             Bitmap fullsizeimage= BitmapFactory.decodeFile(photoController.currentPhotoPath);
-            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage,SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300));
+            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage,SwipeHelper.dpToPx(100),SwipeHelper.dpToPx(100));
             this.objet.setThumbnail(photoController.currentPhotoPath);
             this.objet.setFullsizeImage( photoController.currentPhotoPath);
             this.imageView.setImageBitmap(imageBitmap);
@@ -128,7 +137,7 @@ public class ObjetViewDetail extends AppCompatActivity {
         objetManager.open();
         this.objet = objetManager.getObjet(this.objet.getId().toString());
         if(this.objet.getThumbnail()!=null){
-            this.imageView.setImageBitmap(photoController.getResizedBitmap(BitmapFactory.decodeFile(this.objet.getThumbnail()),SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300)));
+            this.imageView.setImageBitmap(photoController.getResizedBitmap(BitmapFactory.decodeFile(this.objet.getThumbnail()),SwipeHelper.dpToPx(100),SwipeHelper.dpToPx(100)));
         }
     }
 

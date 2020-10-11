@@ -89,7 +89,7 @@ public class RangementViewDetail extends AppCompatActivity {
             Log.d("DEBUG PHOTO", "Photo prise : "+ photoController.currentPhotoPath);
             Bitmap fullsizeimage= BitmapFactory.decodeFile(photoController.currentPhotoPath);
 
-            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage, SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300));
+            Bitmap imageBitmap = photoController.getResizedBitmap(fullsizeimage, SwipeHelper.dpToPx(100),SwipeHelper.dpToPx(100));
             this.rangement.setThumbnail(photoController.currentPhotoPath);
             this.rangement.setFullsizeImage( photoController.currentPhotoPath);
             this.imageView.setImageBitmap(imageBitmap);
@@ -101,7 +101,7 @@ public class RangementViewDetail extends AppCompatActivity {
         rangementManager.open();
         this.rangement = rangementManager.getRangements(this.rangement.getId().toString());
         if(this.rangement.getThumbnail()!=null)
-            this.imageView.setImageBitmap(photoController.getResizedBitmap(BitmapFactory.decodeFile(this.rangement.getFullsizeImage()), SwipeHelper.dpToPx(300),SwipeHelper.dpToPx(300)));
+            this.imageView.setImageBitmap(photoController.getResizedBitmap(BitmapFactory.decodeFile(this.rangement.getFullsizeImage()), SwipeHelper.dpToPx(100),SwipeHelper.dpToPx(100)));
     }
 
     private void save(){
