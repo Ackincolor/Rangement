@@ -127,11 +127,17 @@ public class DashboardFragment extends Fragment implements SearchableFragment {
     @Override
     public void searchText(String query) {
         Log.d("debug search","text to search in object : "+query);
+        this.objetAdapter.setObjets(dashboardViewModel.search(query));
+        this.objetAdapter.notifyDataSetChanged();
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((SearchableActivity)context).setCurrentFragment(this);
-        Log.d("debug search","fragment atttached objet");
+        try {
+            ((SearchableActivity) context).setCurrentFragment(this);
+            Log.d("debug search", "fragment atttached objet");
+        }catch(ClassCastException exp){
+            Log.d("debug search","exception de cast : "+exp.getMessage());
+        }
     }
 }

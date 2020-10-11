@@ -29,6 +29,10 @@ public class RangementAdapter extends RecyclerView.Adapter<RangementAdapter.Rang
         this.clickRangementcontroller = clickRangementcontroller;
     }
 
+    public void setRangements(List<Rangement> rangements){
+        this.rangements = rangements;
+    }
+
     @Override
     public int getItemCount() {
         return rangements.size();

@@ -33,6 +33,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements SearchableFragment {
 
     private HomeViewModel homeViewModel;
+    private RangementAdapter rangementAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class HomeFragment extends Fragment implements SearchableFragment {
             homeViewModel.loadFromDatabase();
             ClickRangementcontroller clickRangementcontroller = new ClickRangementcontroller(recyclerView,homeViewModel,(MainActivity) getParentFragment().getActivity());
             ((MainActivity) getParentFragment().getActivity()).setHomeViewModel(homeViewModel);
-            RangementAdapter rangementAdapter = new RangementAdapter(inflater, homeViewModel.getRangements(),clickRangementcontroller);
+            this.rangementAdapter = new RangementAdapter(inflater, homeViewModel.getRangements(),clickRangementcontroller);
             recyclerView.setAdapter(rangementAdapter);
             Activity mainActivity = null;
             try {
@@ -106,6 +107,8 @@ public class HomeFragment extends Fragment implements SearchableFragment {
     @Override
     public void searchText(String query) {
         Log.d("debug search","text to search : "+query);
+        this.rangementAdapter.setRangements(homeViewModel.search(query));
+        this.rangementAdapter.notifyDataSetChanged();
     }
 
     @Override
