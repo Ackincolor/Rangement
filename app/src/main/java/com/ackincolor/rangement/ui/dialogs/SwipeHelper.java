@@ -8,11 +8,13 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.ackincolor.rangement.MainActivity;
+import com.ackincolor.rangement.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -246,14 +248,22 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             p.setColor(Color.WHITE);
             p.setTextSize(11);
 
-            Rect r = new Rect();
-            float cHeight = rect.height();
-            float cWidth = rect.width();
-            p.setTextAlign(Paint.Align.LEFT);
-            p.getTextBounds(text, 0, text.length(), r);
-            float x = cWidth / 2f - r.width() / 2f - r.left;
-            float y = cHeight / 2f + r.height() / 2f - r.bottom;
-            c.drawText(text, rect.left + x, rect.top + y, p);
+
+            if(this.imageResId != 0) {
+                Drawable d = this.context.getDrawable(this.imageResId);
+                Rect b = new Rect();
+                d.setBounds((int) rect.left, (int) rect.top, (int)rect.right, (int) rect.bottom);
+                d.draw(c);
+            }else {
+                Rect r = new Rect();
+                float cHeight = rect.height();
+                float cWidth = rect.width();
+                p.setTextAlign(Paint.Align.LEFT);
+                p.getTextBounds(text, 0, text.length(), r);
+                float x = cWidth / 2f - r.width() / 2f - r.left;
+                float y = cHeight / 2f + r.height() / 2f - r.bottom;
+                c.drawText(text, rect.left + x, rect.top + y, p);
+            }
 
             clickRegion = rect;
             this.pos = pos;

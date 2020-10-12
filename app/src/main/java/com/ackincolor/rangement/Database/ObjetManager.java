@@ -179,6 +179,12 @@ public class ObjetManager {
             Objet objet = new Objet(c.getString(1));
             objet.setId(UUID.fromString(c.getString(0)));
             String image = c.getString(3);
+            try {
+                objet.setRangement(UUID.fromString(c.getString(2)));
+            }catch(IllegalArgumentException e){
+                Log.d("DEBUG","Objet sans UUID de rangement ");
+                objet.setRangement(null);
+            }
             if(image!=null) {
                 objet.setFullsizeImage(image);
             }

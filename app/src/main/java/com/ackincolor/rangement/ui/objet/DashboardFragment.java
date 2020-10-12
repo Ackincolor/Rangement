@@ -81,7 +81,7 @@ public class DashboardFragment extends Fragment implements SearchableFragment {
                 public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                     underlayButtons.add(new SwipeHelper.UnderlayButton(
                             "Supprimer",
-                            0,
+                            R.drawable.ic_delete_white_24dp,
                             Color.parseColor("#FF3C30"),
                             new SwipeHelper.UnderlayButtonClickListener() {
                                 @Override
