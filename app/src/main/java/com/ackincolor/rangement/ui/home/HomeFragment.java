@@ -64,8 +64,8 @@ public class HomeFragment extends Fragment implements SearchableFragment {
                 @Override
                 public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                     underlayButtons.add(new SwipeHelper.UnderlayButton(
-                            "Supprimer",
-                            0,
+                            "",
+                            R.drawable.ic_delete_white_24dp,
                             Color.parseColor("#FF3C30"),
                             new SwipeHelper.UnderlayButtonClickListener() {
                                 @Override
@@ -78,8 +78,8 @@ public class HomeFragment extends Fragment implements SearchableFragment {
                             mainActivity2
                     ));
                     underlayButtons.add(new SwipeHelper.UnderlayButton(
-                            "Modifier",
-                            0,
+                            "",
+                            R.drawable.ic_baseline_modify_24,
                             Color.parseColor("#C7C7CB"),
                             new SwipeHelper.UnderlayButtonClickListener() {
                                 @Override
@@ -108,6 +108,15 @@ public class HomeFragment extends Fragment implements SearchableFragment {
     public void searchText(String query) {
         Log.d("debug search","text to search : "+query);
         this.rangementAdapter.setRangements(homeViewModel.search(query));
+        this.rangementAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("debug search", "on Resume fragment");
+        this.homeViewModel.loadFromDatabase();
+        this.rangementAdapter.setRangements(this.homeViewModel.getRangements());
         this.rangementAdapter.notifyDataSetChanged();
     }
 

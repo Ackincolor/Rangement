@@ -80,7 +80,7 @@ public class DashboardFragment extends Fragment implements SearchableFragment {
                 @Override
                 public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                     underlayButtons.add(new SwipeHelper.UnderlayButton(
-                            "Supprimer",
+                            "",
                             R.drawable.ic_delete_white_24dp,
                             Color.parseColor("#FF3C30"),
                             new SwipeHelper.UnderlayButtonClickListener() {
@@ -88,16 +88,19 @@ public class DashboardFragment extends Fragment implements SearchableFragment {
                                 public void onClick(int pos) {
                                     // TODO: onDelete
                                     Objet objet = dashboardViewModel.getObjets().get(pos);
-                                    if(dashboardViewModel.deleteObjet(objet))
+                                    if(dashboardViewModel.deleteObjet(objet)) {
+                                        dashboardViewModel.loadFromDatabase();
+                                        objetAdapter.setObjets(dashboardViewModel.getObjets());
                                         objetAdapter.notifyDataSetChanged();
+                                    }
 
                                 }
                             },
                             mainActivity2
                     ));
                     underlayButtons.add(new SwipeHelper.UnderlayButton(
-                            "Modifier",
-                            0,
+                            "",
+                            R.drawable.ic_baseline_modify_24,
                             Color.parseColor("#C7C7CB"),
                             new SwipeHelper.UnderlayButtonClickListener() {
                                 @Override
@@ -134,9 +137,11 @@ public class DashboardFragment extends Fragment implements SearchableFragment {
     public void onResume() {
         super.onResume();
         Log.d("debug search", "on Resume fragment");
-        this.dashboardViewModel.loadFromDatabase();
-        this.objetAdapter.setObjets(this.dashboardViewModel.getObjets());
-        this.objetAdapter.notifyDataSetChanged();
+        if(isMainView) {
+            this.dashboardViewModel.loadFromDatabase();
+            this.objetAdapter.setObjets(this.dashboardViewModel.getObjets());
+            this.objetAdapter.notifyDataSetChanged();
+        }
     }
 
 

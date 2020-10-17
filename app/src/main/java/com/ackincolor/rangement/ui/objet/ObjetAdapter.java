@@ -3,6 +3,7 @@ package com.ackincolor.rangement.ui.objet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ackincolor.rangement.R;
@@ -67,7 +68,7 @@ public class ObjetAdapter extends RecyclerView.Adapter<ObjetAdapter.BaseViewHold
             rangementViewHolder.view = itemRangement;
             rangementViewHolder.from = (TextView) itemRangement.findViewById(R.id.tvFrom);
             rangementViewHolder.message = (TextView) itemRangement.findViewById(R.id.tvMessage);
-            rangementViewHolder.date = (TextView) itemRangement.findViewById(R.id.tvDate);
+            rangementViewHolder.image = (ImageView) itemRangement.findViewById(R.id.thumbnailRangement);
             return rangementViewHolder;
         }else{
             View itemSeparator = inflater.inflate(R.layout.separator_view, parent, false);
@@ -84,14 +85,13 @@ public class ObjetAdapter extends RecyclerView.Adapter<ObjetAdapter.BaseViewHold
             holder2.view = holder.itemView;
             holder2.from = (TextView) holder.itemView.findViewById(R.id.tvFrom);
             holder2.message = (TextView) holder.itemView.findViewById(R.id.tvMessage);
-            holder2.date = (TextView) holder.itemView.findViewById(R.id.tvDate);
+            holder2.image = (ImageView) holder.itemView.findViewById(R.id.thumbnailRangement);
             Objet message = objets.get(position);
             holder2.from.setText(message.getNom());
-            holder2.message.setText("volume");
             try {
-                holder2.date.setText(message.getStatus());
+                holder2.message.setText(message.getStatus());
             }catch(NullPointerException e){
-                holder2.date.setText("PAS RANGE !");
+                holder2.message.setText("PAS RANGE !");
             }
             holder2.position = position;
             holder = holder2;
@@ -111,7 +111,8 @@ public class ObjetAdapter extends RecyclerView.Adapter<ObjetAdapter.BaseViewHold
     }
     public static class ObjetViewHolder extends BaseViewHolder {
         View view;
-        TextView from, message, date;
+        TextView from, message;
+        ImageView image;
         int position;
 
         public ObjetViewHolder(View itemView) {

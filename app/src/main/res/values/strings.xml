@@ -18,4 +18,5 @@
     <string name="Ajouterunobjet">Ajouter un objet</string>
     <string name="search_title">Rechercher un objet</string>
     <string name="search_hint">Rechercher ici</string>
+    <string name="title_contact">Contact</string>
 </resources>
